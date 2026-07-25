@@ -62,3 +62,33 @@ class AgendamentoService:
             agora.isoformat(),
             limite.isoformat(),
         )
+
+    def cancelar_agendamento(self, agendamento_id):
+        agendamento = self.repository.buscar_por_id(agendamento_id)
+
+        if agendamento is None:
+            raise ValueError("Agendamento não encontrado.")
+
+        if agendamento.status == "concluido":
+            raise ValueError(
+                "Não é possível cancelar um agendamento já concluído."
+            )
+
+        self.repository.atualizar_status(
+            agendamento_id,
+            "cancelado",
+        )
+
+    def concluir_agendamento(self, agendamento_id):
+        agendamento = self.repository.buscar_por_id(agendamento_id)
+
+        if agendamento is None:
+            raise ValueError("Agendamento não encontrado.")
+
+        self.repository.atualizar_status(
+            agendamento_id,
+            "concluido",
+        )
+
+    def historico_do_cliente(self, cliente_id):
+        return self.repository.historico_do_cliente(cliente_id)
