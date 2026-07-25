@@ -132,10 +132,9 @@ class AgendamentoRepository:
         cursor = conexao.cursor() 
         cursor.execute( 
             """SELECT p.nome, COUNT(a.id), 
-COALESCE(SUM(s.preco), 0) 
+                COALESCE(SUM(s.preco), 0) 
                FROM agendamentos a 
-               JOIN profissionais p ON p.id = 
-a.profissional_id 
+               JOIN profissionais p ON p.id = a.profissional_id 
                JOIN servicos s ON s.id = a.servico_id 
                WHERE a.status = 'concluido' 
                GROUP BY p.nome 
