@@ -92,3 +92,10 @@ class AgendamentoService:
 
     def historico_do_cliente(self, cliente_id):
         return self.repository.historico_do_cliente(cliente_id)
+
+    def relatorio_faturamento(self): 
+        linhas = self.repository.faturamento_por_profissional() 
+        return [ 
+            {"profissional": nome, "atendimentos": total, "faturamento": float(faturamento)} 
+            for nome, total, faturamento in linhas 
+        ] 
