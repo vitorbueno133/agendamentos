@@ -13,19 +13,36 @@ class AgendamentoService:
         self.profissionais = ProfissionalRepository()
         self.servicos = ServicoRepository()
 
+    def _buscar_ou_falhar(self, lista, entidade_id, nome_entidade):
+        """Busca uma entidade por id em uma lista; levanta ValueError se não existir."""
+        item = next((e for e in lista if e.id == entidade_id), None)
+
+        if item is None:
+            raise ValueError(f"{nome_entidade} não encontrado.")
+
+        return item
+
+
     def criar_agendamento(self, cliente_id, profissional_id, servico_id, data_hora):
-        ids_clientes = [c.id for c in self.clientes.listar_todos()]
+        """Cria um agendamento, validando cliente, profissional, serviço e conflito de horário."""
 
-        if cliente_id not in ids_clientes:
-            raise ValueError("Cliente não encontrado.")
-
-        servico = next(
-            (s for s in self.servicos.listar_todos() if s.id == servico_id),
-            None,
+        self._buscar_ou_falhar(
+            self.clientes.listar_todos(),
+            cliente_id,
+            "Cliente",
         )
 
-        if servico is None:
-            raise ValueError("Serviço não encontrado.")
+        self._buscar_ou_falhar(
+            self.profissionais.listar_todos(),
+            profissional_id,
+            "Profissional",
+        )
+
+        servico = self._buscar_ou_falhar(
+            self.servicos.listar_todos(),
+            servico_id,
+            "Serviço",
+        )
 
         inicio = datetime.fromisoformat(data_hora)
         fim = inicio + timedelta(minutes=servico.duracao_minutos)
