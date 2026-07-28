@@ -37,3 +37,8 @@ methods=["GET"])
 def historico(cliente_id): 
     agendamentos = service.historico_do_cliente(cliente_id) 
     return jsonify([vars(a) for a in agendamentos])
+
+@agendamento_bp.route("/api/agendamentos", 
+methods=["GET"]) 
+def listar(): 
+    return jsonify(service.listar_agendamentos())
