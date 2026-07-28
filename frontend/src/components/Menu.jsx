@@ -9,7 +9,6 @@ function Menu({ telaAtiva, aoTrocarTela }) {
   return (
     <header className="menu">
       <div className="menu-logo">
-        <div className="logo">A</div>
 
         <div>
           <h2>Agendamentos SaaS</h2>
