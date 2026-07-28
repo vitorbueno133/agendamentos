@@ -66,3 +66,23 @@ fetch(`${BASE_URL}/api/servicos`, {
   } 
   return dados; 
 }
+
+export async function listarAgendamentos() { 
+  const resposta = await 
+fetch(`${BASE_URL}/api/agendamentos`); 
+  return resposta.json(); 
+} 
+  
+export async function criarAgendamento(agendamento) { 
+  const resposta = await 
+fetch(`${BASE_URL}/api/agendamentos`, { 
+    method: "POST", 
+    headers: { "Content-Type": "application/json" }, 
+    body: JSON.stringify(agendamento), 
+  }); 
+  const dados = await resposta.json(); 
+  if (!resposta.ok) {
+     throw new Error(dados.erro || "Erro ao criar agendamento."); 
+  } 
+  return dados; 
+}

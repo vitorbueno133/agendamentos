@@ -1,30 +1,36 @@
 import { useEffect, useState } from "react"; 
 import Menu from "./components/Menu"; 
+import AgendaList from "./components/AgendaList"; 
+import NovoAgendamentoForm from "./components/NovoAgendamentoForm"; 
 import ClienteList from "./components/ClienteList"; 
 import ClienteForm from "./components/ClienteForm"; 
-import ProfissionalList from 
-"./components/ProfissionalList"; 
-import ProfissionalForm from 
-"./components/ProfissionalForm"; 
-import ServicoList from "./components/ServicoList"; 
+import ProfissionalList from "./components/ProfissionalList"; 
+import ProfissionalForm from "./components/ProfissionalForm"; 
+import ServicoList from "./components/ServicoList";
 import ServicoForm from "./components/ServicoForm"; 
 import { 
   listarClientes, criarCliente, 
   listarProfissionais, criarProfissional, 
   listarServicos, criarServico, 
+  listarAgendamentos, criarAgendamento, 
 } from "./services/api"; 
   
 function App() { 
-  const [telaAtiva, setTelaAtiva] = useState("clientes"); 
+  const [telaAtiva, setTelaAtiva] = 
+useState("agenda"); 
   const [clientes, setClientes] = useState([]); 
-  const [profissionais, setProfissionais] = useState([]); 
-  const [servicos, setServicos] = useState([]);
-   const [erro, setErro] = useState(null); 
+  const [profissionais, setProfissionais] = 
+useState([]); 
+  const [servicos, setServicos] = useState([]); 
+  const [agendamentos, setAgendamentos] = 
+useState([]); 
+  const [erro, setErro] = useState(null); 
   
   useEffect(() => { 
     listarClientes().then(setClientes); 
     listarProfissionais().then(setProfissionais); 
     listarServicos().then(setServicos); 
+    listarAgendamentos().then(setAgendamentos); 
   }, []); 
   
   async function adicionarCliente(novoCliente) { 
@@ -39,8 +45,8 @@ function App() {
   
   async function 
 adicionarProfissional(novoProfissional) { 
-    try { 
-      setErro(null); 
+    try {
+       setErro(null); 
       const criado = await 
 criarProfissional(novoProfissional); 
       setProfissionais([...profissionais, criado]); 
@@ -57,11 +63,37 @@ criarProfissional(novoProfissional);
     } catch (e) { 
       setErro(e.message); 
     } 
-  }
-   return ( 
+  } 
+  
+  async function adicionarAgendamento(novoAgendamento) 
+{ 
+    try { 
+      setErro(null); 
+      await criarAgendamento(novoAgendamento); 
+      listarAgendamentos().then(setAgendamentos); 
+    } catch (e) { 
+      setErro(e.message); 
+    } 
+  } 
+  
+  return ( 
     <div> 
-      <Menu telaAtiva={telaAtiva} aoTrocarTela={setTelaAtiva} /> 
+      <Menu telaAtiva={telaAtiva} 
+aoTrocarTela={setTelaAtiva} /> 
       {erro && <p style={{ color: "red" }}>{erro}</p>} 
+  
+      {telaAtiva === "agenda" && ( 
+        <div> 
+          <h1>Agenda</h1>
+           <NovoAgendamentoForm 
+            clientes={clientes} 
+            profissionais={profissionais} 
+            servicos={servicos} 
+            aoSalvar={adicionarAgendamento} 
+          /> 
+          <AgendaList agendamentos={agendamentos} /> 
+        </div> 
+      )} 
   
       {telaAtiva === "clientes" && ( 
         <div> 
@@ -89,5 +121,4 @@ criarProfissional(novoProfissional);
     </div> 
   ); 
 } 
-  
 export default App; 
