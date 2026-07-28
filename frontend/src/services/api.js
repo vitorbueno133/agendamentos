@@ -25,3 +25,44 @@ fetch(`${BASE_URL}/api/clientes`, {
   } 
   return dados; 
 } 
+
+export async function listarProfissionais() { 
+  const resposta = await 
+fetch(`${BASE_URL}/api/profissionais`); 
+  return resposta.json(); 
+} 
+  
+export async function criarProfissional(profissional) 
+{ 
+  const resposta = await 
+fetch(`${BASE_URL}/api/profissionais`, { 
+    method: "POST", 
+    headers: { "Content-Type": "application/json" }, 
+    body: JSON.stringify(profissional), 
+  }); 
+  const dados = await resposta.json(); 
+  if (!resposta.ok) { 
+    throw new Error(dados.erro || "Erro ao criar profissional."); 
+  } 
+  return dados; 
+} 
+  
+export async function listarServicos() { 
+  const resposta = await 
+fetch(`${BASE_URL}/api/servicos`); 
+  return resposta.json(); 
+} 
+  
+export async function criarServico(servico) { 
+  const resposta = await 
+fetch(`${BASE_URL}/api/servicos`, { 
+ method: "POST", 
+    headers: { "Content-Type": "application/json" }, 
+    body: JSON.stringify(servico), 
+  }); 
+  const dados = await resposta.json(); 
+  if (!resposta.ok) { 
+    throw new Error(dados.erro || "Erro ao criar serviço."); 
+  } 
+  return dados; 
+}
