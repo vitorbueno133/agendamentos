@@ -8,32 +8,37 @@ import ProfissionalList from "./components/ProfissionalList";
 import ProfissionalForm from "./components/ProfissionalForm"; 
 import ServicoList from "./components/ServicoList";
 import ServicoForm from "./components/ServicoForm"; 
+import LoginForm from "./components/LoginForm";
 import { 
   listarClientes, criarCliente, 
   listarProfissionais, criarProfissional, 
   listarServicos, criarServico, 
-  listarAgendamentos, criarAgendamento, cancelarAgendamento
+  listarAgendamentos, criarAgendamento, cancelarAgendamento, estaLogado, sair,
 } from "./services/api"; 
 import "./App.css";
   
 function App() { 
-  const [telaAtiva, setTelaAtiva] = 
-useState("agenda"); 
+  const [logado, setLogado] = useState(estaLogado());
+  const [telaAtiva, setTelaAtiva] = useState("agenda"); 
   const [clientes, setClientes] = useState([]); 
-  const [profissionais, setProfissionais] = 
-useState([]); 
+  const [profissionais, setProfissionais] = useState([]); 
   const [servicos, setServicos] = useState([]); 
-  const [agendamentos, setAgendamentos] = 
-useState([]); 
+  const [agendamentos, setAgendamentos] = useState([]); 
   const [erro, setErro] = useState(null); 
   
   useEffect(() => { 
-    listarClientes().then(setClientes); 
-    listarProfissionais().then(setProfissionais); 
-    listarServicos().then(setServicos); 
-    listarAgendamentos().then(setAgendamentos); 
-  }, []); 
-  
+  if (!logado) return; 
+  listarClientes().then(setClientes); 
+  listarProfissionais().then(setProfissionais); 
+  listarServicos().then(setServicos); 
+  listarAgendamentos().then(setAgendamentos); 
+}, [logado]);
+
+  if (!logado) { 
+  return <LoginForm aoEntrar={() => setLogado(true)} 
+/>; 
+} 
+
   async function adicionarCliente(novoCliente) { 
     try { 
       setErro(null); 
@@ -91,6 +96,12 @@ criarProfissional(novoProfissional);
     <div> 
       <Menu telaAtiva={telaAtiva} 
 aoTrocarTela={setTelaAtiva} /> 
+
+<button className="botao-sair" onClick={() => { 
+sair(); setLogado(false); }}> 
+  Sair 
+</button> 
+
       {erro && <p style={{ color: "red" }}>{erro}</p>} 
   
       {telaAtiva === "agenda" && ( 

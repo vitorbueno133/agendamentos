@@ -69,7 +69,9 @@ fetch(`${BASE_URL}/api/servicos`, {
 
 export async function listarAgendamentos() { 
   const resposta = await 
-fetch(`${BASE_URL}/api/agendamentos`); 
+fetch(`${BASE_URL}/api/agendamentos`, { 
+    headers: cabecalhoAutenticado(), 
+  }); 
   return resposta.json(); 
 } 
   
@@ -77,7 +79,7 @@ export async function criarAgendamento(agendamento) {
   const resposta = await 
 fetch(`${BASE_URL}/api/agendamentos`, { 
     method: "POST", 
-    headers: { "Content-Type": "application/json" }, 
+    headers: { "Content-Type": "application/json", ...cabecalhoAutenticado() }, 
     body: JSON.stringify(agendamento), 
   }); 
   const dados = await resposta.json(); 
@@ -90,7 +92,8 @@ fetch(`${BASE_URL}/api/agendamentos`, {
 export async function cancelarAgendamento(id) { 
   const resposta = await 
 fetch(`${BASE_URL}/api/agendamentos/${id}/cancelar`, { 
-  method: "POST", 
+  method: "POST",
+  headers: cabecalhoAutenticado(),
 }); 
 const dados = await resposta.json(); 
 if (!resposta.ok) {
@@ -98,3 +101,30 @@ if (!resposta.ok) {
   } 
   return dados; 
 } 
+
+export async function login(email, senha) { 
+const resposta = await 
+fetch(`${BASE_URL}/api/login`, { 
+method: "POST", 
+headers: { "Content-Type": "application/json" }, 
+body: JSON.stringify({ email, senha }), 
+}); 
+const dados = await resposta.json(); 
+if (!resposta.ok) { 
+throw new Error(dados.erro || "Nao foi possivel entrar."); 
+} 
+ localStorage.setItem("token", dados.token); 
+  return dados; 
+} 
+  
+export function estaLogado() { 
+  return localStorage.getItem("token") !== null; 
+} 
+  
+export function sair() { 
+  localStorage.removeItem("token"); 
+} 
+  
+export function cabecalhoAutenticado() { 
+  return { Authorization: `Bearer ${localStorage.getItem("token")}` };
+}

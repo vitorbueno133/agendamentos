@@ -301,3 +301,100 @@ td button {
     font-size: 15px;
   }
 }
+
+/* ==========================================================================
+   7. Tela de Login (.login-card)
+   ========================================================================== */
+
+.login-card {
+  width: 100%;
+  max-width: 420px; /* Limita a largura no desktop para não ficar gigante */
+  margin: 15vh auto; /* Centraliza horizontalmente com espaçamento no topo */
+  padding: 32px 24px;
+  text-align: center; /* Centraliza os cabeçalhos */
+  
+  /* Sobrescreve o grid de 2 colunas do desktop (regrada do passo 4) */
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.login-card h1 {
+  color: var(--cor-primaria);
+  font-size: 26px;
+  margin-top: 0;
+  margin-bottom: 4px;
+}
+
+.login-card p {
+  color: var(--cor-texto-suave);
+  font-size: 15px;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+/* Estilização específica da mensagem de erro */
+.login-card p.erro {
+  background-color: #fde8e8; /* Fundo vermelho bem claro */
+  color: var(--cor-perigo);
+  border: 1px solid #f9a8d4;
+  border-radius: var(--raio-pequeno);
+  padding: 12px;
+  margin-bottom: 12px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Garante que o botão ocupe toda a largura no formulário de login */
+.login-card button[type="submit"] {
+  width: 100% !important;
+  margin-top: 8px;
+}
+
+/* ==========================================================================
+   Botão de Sair (Canto Superior Direito)
+   ========================================================================== */
+.botao-sair {
+  
+  
+  /* Visual moderno: fundo claro, texto e borda vermelhos */
+  background-color: var(--cor-superficie);
+  color: var(--cor-perigo);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+  
+  padding: 8px 16px;
+  min-height: 40px; /* Alvo de toque adequado */
+  
+  font-family: var(--fonte-titulo);
+  font-size: 14px;
+  font-weight: 600;
+  
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Efeito ao passar o mouse: inverte as cores e aumenta a sombra */
+.botao-sair:hover {
+  background-color: var(--cor-perigo);
+  color: #ffffff;
+  border-color: var(--cor-perigo);
+  box-shadow: 0 4px 12px rgba(209, 48, 90, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Efeito ao clicar (botão afunda levemente) */
+.botao-sair:active {
+  transform: scale(0.96);
+}
+
+/* Ajuste de tamanho e posição para celulares */
+@media (max-width: 767px) {
+  .botao-sair {
+    top: 12px;
+    right: 12px;
+    padding: 6px 12px;
+    min-height: 36px;
+    font-size: 13px;
+  }
+}
