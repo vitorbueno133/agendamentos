@@ -3,7 +3,8 @@ function Menu({ telaAtiva, aoTrocarTela }) {
     { chave: "agenda", rotulo: "Agenda" }, 
     { chave: "clientes", rotulo: "Clientes" }, 
     { chave: "profissionais", rotulo: "Profissionais"}, 
-    { chave: "servicos", rotulo: "Serviços" }, 
+    { chave: "servicos", rotulo: "Serviços" },
+    { chave: "relatorios", rotulo: "Relatorios" },
   ];
 
   return ( 

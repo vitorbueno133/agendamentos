@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000"; 
+const BASE_URL = VITE_API_URL || "http://localhost:5000"; 
   
 export async function buscarStatus() { 
   const resposta = await 
@@ -128,3 +128,15 @@ export function sair() {
 export function cabecalhoAutenticado() { 
   return { Authorization: `Bearer ${localStorage.getItem("token")}` };
 }
+
+export async function buscarFaturamento() { 
+  const resposta = await 
+fetch(`${BASE_URL}/api/relatorios/faturamento`, { 
+    headers: cabecalhoAutenticado(), 
+  }); 
+  return resposta.json(); 
+} 
+  
+export function urlExportacaoCsv() { 
+  return `${BASE_URL}/api/relatorios/faturamento/csv`; 
+} 

@@ -1,14 +1,16 @@
 import csv 
 import io
 from flask import Blueprint, jsonify, Response 
-from services.agendamento_service import AgendamentoService 
+from services.agendamento_service import AgendamentoService
+from routes.auth_routes import token_obrigatorio
   
 relatorio_bp = Blueprint("relatorios", __name__) 
 service = AgendamentoService() 
   
   
 @relatorio_bp.route("/api/relatorios/faturamento", 
-methods=["GET"]) 
+methods=["GET"])
+@token_obrigatorio
 def faturamento(): 
     return jsonify(service.relatorio_faturamento()) 
   

@@ -9,6 +9,7 @@ import ProfissionalForm from "./components/ProfissionalForm";
 import ServicoList from "./components/ServicoList";
 import ServicoForm from "./components/ServicoForm"; 
 import LoginForm from "./components/LoginForm";
+import RelatorioFaturamento from "./components/RelatorioFaturamento"; 
 import { 
   listarClientes, criarCliente, 
   listarProfissionais, criarProfissional, 
@@ -140,6 +141,14 @@ sair(); setLogado(false); }}>
           <ServicoList servicos={servicos} /> 
         </div> 
       )} 
+
+      {telaAtiva === "relatorios" && ( 
+        <div> 
+          <h1>Relatorio de faturamento</h1> 
+          <RelatorioFaturamento /> 
+        </div> 
+      )} 
+
     </div> 
   ); 
 } 
