@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"; 
+const BASE_URL = "http://localhost:5000"; 
   
 export async function buscarStatus() { 
   const resposta = await 
@@ -86,3 +86,15 @@ fetch(`${BASE_URL}/api/agendamentos`, {
   } 
   return dados; 
 }
+
+export async function cancelarAgendamento(id) { 
+  const resposta = await 
+fetch(`${BASE_URL}/api/agendamentos/${id}/cancelar`, { 
+  method: "POST", 
+}); 
+const dados = await resposta.json(); 
+if (!resposta.ok) {
+   throw new Error(dados.erro || "Erro ao cancelar agendamento."); 
+  } 
+  return dados; 
+} 

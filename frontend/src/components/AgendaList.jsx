@@ -1,4 +1,4 @@
-function AgendaList({ agendamentos }) { 
+function AgendaList({ agendamentos, aoCancelar }) { 
   return ( 
     <table> 
       <thead> 
@@ -6,8 +6,9 @@ function AgendaList({ agendamentos }) {
           <th>Data/Hora</th> 
           <th>Cliente</th> 
           <th>Profissional</th> 
-        <th>Serviço</th>
-         <th>Status</th> 
+          <th>Servico</th> 
+          <th>Status</th> 
+          <th>Acoes</th> 
         </tr> 
       </thead> 
       <tbody> 
@@ -18,6 +19,12 @@ function AgendaList({ agendamentos }) {
             <td>{agendamento.profissional}</td> 
             <td>{agendamento.servico}</td> 
             <td>{agendamento.status}</td> 
+            <td> 
+              {agendamento.status === "confirmado" && 
+( 
+                <button onClick={() => aoCancelar(agendamento.id)}>Cancelar</button>
+                 )} 
+            </td> 
           </tr> 
         ))} 
       </tbody> 
@@ -25,4 +32,4 @@ function AgendaList({ agendamentos }) {
   ); 
 } 
   
-export default AgendaList; 
+export default AgendaList;

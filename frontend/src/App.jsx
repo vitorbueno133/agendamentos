@@ -12,7 +12,7 @@ import {
   listarClientes, criarCliente, 
   listarProfissionais, criarProfissional, 
   listarServicos, criarServico, 
-  listarAgendamentos, criarAgendamento, 
+  listarAgendamentos, criarAgendamento, cancelarAgendamento
 } from "./services/api"; 
 import "./App.css";
   
@@ -76,6 +76,16 @@ criarProfissional(novoProfissional);
       setErro(e.message); 
     } 
   } 
+
+  async function cancelarAgendamentoNaTela(id) { 
+  try { 
+    setErro(null); 
+    await cancelarAgendamento(id); 
+    listarAgendamentos().then(setAgendamentos); 
+  } catch (e) { 
+    setErro(e.message); 
+  } 
+} 
   
   return ( 
     <div> 
@@ -92,7 +102,7 @@ aoTrocarTela={setTelaAtiva} />
             servicos={servicos} 
             aoSalvar={adicionarAgendamento} 
           /> 
-          <AgendaList agendamentos={agendamentos} /> 
+          <AgendaList agendamentos={agendamentos} aoCancelar={cancelarAgendamentoNaTela} /> 
         </div> 
       )} 
   

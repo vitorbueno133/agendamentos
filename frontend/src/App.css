@@ -1,138 +1,303 @@
-/* App.css */
+/* ==========================================================================
+   App.css — Sistema de Agendamentos (Versão 3 - Correção Final de Responsividade)
+   Mobile-first. Cor principal: roxo #7A1FA2
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600&display=swap");
+
+/* --------------------------------------------------------------------------
+   1. Tokens (cores, tipografia, espaçamento)
+   -------------------------------------------------------------------------- */
 :root {
-  --primary-color: #7A1FA2;
-  --primary-hover: #5e167e;
-  --bg-color: #f4f6f8;
-  --text-color: #333333;
-  --card-bg: #ffffff;
-  --border-radius: 8px;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --cor-primaria: #7a1fa2;
+  --cor-primaria-hover: #611881;
+  --cor-primaria-clara: #f3e8fa;
+  --cor-primaria-borda: #d9b8ec;
+  --cor-fundo: #f7f5fa;
+  --cor-superficie: #ffffff;
+  --cor-texto: #221c29;
+  --cor-texto-suave: #6b6478;
+  --cor-borda: #e4dfec;
+  --cor-linha-zebra: #f7f2fb;
+  --cor-sucesso: #1f9d55;
+  --cor-perigo: #d1305a;
+  --cor-perigo-hover: #ad2249;
+  --fonte-titulo: "Sora", "Segoe UI", sans-serif;
+  --fonte-corpo: "Inter", "Segoe UI", sans-serif;
+  --raio: 12px;
+  --raio-pequeno: 8px;
+  --sombra-card: 0 1px 2px rgba(34, 28, 41, 0.04), 0 8px 24px -12px rgba(122, 31, 162, 0.18);
+  --alvo-toque: 44px;
 }
 
-body {
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color);
+/* --------------------------------------------------------------------------
+   2. Reset Agressivo para evitar "vazamento" de telas
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box !important;
   margin: 0;
   padding: 0;
 }
 
-/* =========================================
-   Menu de Navegação Horizontal
-========================================= */
-nav {
-  background-color: var(--primary-color);
-  padding: 15px 30px;
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden; /* Impede a rolagem horizontal da página toda */
+  background: var(--cor-fundo);
+}
+
+body {
+  color: var(--cor-texto);
+  font-family: var(--fonte-corpo);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Container Principal */
+#root, .App {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px;
   display: flex;
-  gap: 15px;
-  justify-content: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 40px;
+  flex-direction: column;
+}
+
+h1, h2, h3 {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  color: var(--cor-texto);
+  margin-bottom: 16px;
+  margin-top: 16px;
+  width: 100%;
+  word-wrap: break-word;
+}
+
+/* --------------------------------------------------------------------------
+   3. Menu de navegação (Menu.jsx)
+   -------------------------------------------------------------------------- */
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--cor-primaria);
+  padding: 12px;
+  border-radius: var(--raio);
+  margin-bottom: 24px;
+  width: 100%;
+  box-shadow: var(--sombra-card);
 }
 
 nav button {
+  width: 100%;
+  min-height: var(--alvo-toque);
   background: transparent;
+  color: #fff;
   border: none;
-  color: #ffffff;
-  font-size: 16px;
+  border-radius: var(--raio-pequeno);
+  font-family: var(--fonte-titulo);
+  font-size: 15px;
+  text-align: left; /* Garante que o texto não fuja */
+  padding: 0 16px;
   cursor: pointer;
-  padding: 10px 20px;
-  border-radius: 4px;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
-nav button:hover {
-  background-color: rgba(255, 255, 255, 0.15);
+nav button[style*="bold"] {
+  background: #ffffff;
+  color: var(--cor-primaria);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
-/* =========================================
-   Cards dos Formulários
-========================================= */
+@media (min-width: 768px) {
+  nav {
+    flex-direction: row;
+    justify-content: center;
+  }
+  nav button {
+    width: auto;
+    flex: 1;
+    text-align: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. Cards de formulário
+   -------------------------------------------------------------------------- */
 form {
-  background-color: var(--card-bg);
-  padding: 30px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
-  max-width: 500px;
-  margin: 0 auto 40px auto;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 16px;
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-card);
+  padding: 20px;
+  margin-bottom: 24px;
+  width: 100%;
 }
 
-form input, 
+form input,
 form select {
-  padding: 12px 15px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
+  width: 100%;
+  min-height: var(--alvo-toque);
+  padding: 0 16px;
+  font-family: var(--fonte-corpo);
   font-size: 15px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  font-family: inherit;
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+  border: 1.5px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
 }
 
-form input:focus, 
-form select:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(122, 31, 162, 0.15);
+form select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--cor-texto-suave) 50%),
+    linear-gradient(135deg, var(--cor-texto-suave) 50%, transparent 50%);
+  background-position: calc(100% - 16px) center, calc(100% - 11px) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
 }
 
-form button[type="submit"] {
-  background-color: var(--primary-color);
-  color: #ffffff;
+button[type="submit"], 
+td button {
+  min-height: var(--alvo-toque);
+  padding: 0 24px;
+  font-family: var(--fonte-titulo);
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--cor-primaria);
   border: none;
-  padding: 14px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 4px;
+  border-radius: var(--raio-pequeno);
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 15px;
+  width: 100%;
+  margin-top: 8px;
 }
 
-form button[type="submit"]:hover {
-  background-color: var(--primary-hover);
+@media (min-width: 768px) {
+  form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: start;
+    padding: 24px;
+  }
+  form button[type="submit"] {
+    grid-column: 1 / -1;
+    width: auto;
+    justify-self: start;
+  }
 }
 
-/* =========================================
-   Tabelas com Linhas Zebradas
-========================================= */
+/* --------------------------------------------------------------------------
+   5. Tabelas
+   -------------------------------------------------------------------------- */
 table {
   width: 100%;
-  max-width: 1000px;
-  margin: 0 auto 40px auto;
   border-collapse: collapse;
-  background-color: var(--card-bg);
-  box-shadow: var(--shadow);
-  border-radius: var(--border-radius);
-  overflow: hidden;
-}
-
-thead {
-  background-color: var(--primary-color);
-  color: #ffffff;
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-card);
+  margin-bottom: 24px;
 }
 
 th, td {
-  padding: 16px;
+  padding: 14px 16px;
   text-align: left;
+  font-size: 14px;
 }
 
 th {
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-family: var(--fonte-titulo);
+  color: #fff;
+  background: var(--cor-primaria);
 }
 
 tbody tr {
-  border-bottom: 1px solid #e5e7eb;
-  transition: background-color 0.2s ease;
+  border-bottom: 1px solid var(--cor-borda);
 }
 
-/* Linhas Zebradas */
-tbody tr:nth-child(even) {
-  background-color: #f9fafb;
+tbody tr:nth-child(even) { background: var(--cor-linha-zebra); }
+
+td button {
+  background: var(--cor-perigo);
+  width: auto;
+  margin-top: 0;
+  min-height: 36px;
+  font-size: 13px;
 }
 
-tbody tr:hover {
-  background-color: #f3e8f7;
+/* --------------------------------------------------------------------------
+   6. Responsividade Extrema (< 767px) - Transformação da Tabela em Cards
+   -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  /* Tabela vira uma lista empilhada de blocos */
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
+  }
+
+  table {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  thead {
+    display: none; /* Oculta o cabeçalho original da tabela no celular */
+  }
+
+  tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  tr {
+    background: var(--cor-superficie) !important;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra-card);
+    padding: 16px;
+  }
+
+  td {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--cor-linha-zebra);
+    color: var(--cor-texto);
+    font-size: 15px;
+  }
+
+  td:last-child {
+    border-bottom: none;
+  }
+
+  /* Destaca a primeira célula como "Título" do card (Ex: Data ou Nome) */
+  td:first-child {
+    font-family: var(--fonte-titulo);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--cor-primaria);
+    padding-bottom: 12px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--cor-borda);
+  }
+
+  /* Ocultar células vazias */
+  td:empty,
+  td:has(> :only-child:empty) {
+    display: none;
+  }
+
+  /* Botões ocupam a largura toda no celular */
+  td button {
+    width: 100%;
+    margin-top: 16px;
+    min-height: var(--alvo-toque);
+    font-size: 15px;
+  }
 }
