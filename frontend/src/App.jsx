@@ -14,7 +14,7 @@ import {
   listarClientes, criarCliente, 
   listarProfissionais, criarProfissional, 
   listarServicos, criarServico, 
-  listarAgendamentos, criarAgendamento, cancelarAgendamento, estaLogado, sair,
+  listarAgendamentos, criarAgendamento, cancelarAgendamento, estaLogado, sair, concluirAgendamento,
 } from "./services/api"; 
 import "./App.css";
   
@@ -92,6 +92,16 @@ criarProfissional(novoProfissional);
     setErro(e.message); 
   } 
 } 
+
+ async function concluirAgendamentoNaTela(id) { 
+    try { 
+      setErro(null); 
+      await concluirAgendamento(id); 
+      listarAgendamentos().then(setAgendamentos); 
+    } catch (e) { 
+      setErro(e.message); 
+    } 
+  } 
   
   return ( 
     <div> 
@@ -114,7 +124,10 @@ sair(); setLogado(false); }}>
             servicos={servicos} 
             aoSalvar={adicionarAgendamento} 
           /> 
-          <AgendaList agendamentos={agendamentos} aoCancelar={cancelarAgendamentoNaTela} /> 
+          <AgendaList agendamentos={agendamentos} 
+          aoCancelar={cancelarAgendamentoNaTela} 
+          aoConcluir={concluirAgendamentoNaTela} /> 
+          
         </div> 
       )} 
   
