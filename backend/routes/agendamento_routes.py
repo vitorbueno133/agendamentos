@@ -1,11 +1,13 @@
 from flask import Blueprint, jsonify, request
 from services.agendamento_service import AgendamentoService
+from routes.auth_routes import token_obrigatorio
 
 agendamento_bp = Blueprint("agendamentos", __name__)
 service = AgendamentoService()
 
 
 @agendamento_bp.route("/api/agendamentos", methods=["POST"])
+@token_obrigatorio
 def criar_agendamento():
     dados = request.get_json()
 
@@ -24,6 +26,7 @@ def criar_agendamento():
 
 @agendamento_bp.route("/api/agendamentos/<int:agendamento_id>/cancelar", 
 methods=["POST"]) 
+@token_obrigatorio
 def cancelar(agendamento_id): 
     try: 
         service.cancelar_agendamento(agendamento_id) 
@@ -33,12 +36,14 @@ def cancelar(agendamento_id):
   
   
 @agendamento_bp.route("/api/clientes/<int:cliente_id>/historico", 
-methods=["GET"]) 
+methods=["GET"])
+@token_obrigatorio
 def historico(cliente_id): 
     agendamentos = service.historico_do_cliente(cliente_id) 
     return jsonify([vars(a) for a in agendamentos])
 
 @agendamento_bp.route("/api/agendamentos", 
-methods=["GET"]) 
+methods=["GET"])
+@token_obrigatorio
 def listar(): 
     return jsonify(service.listar_agendamentos())
