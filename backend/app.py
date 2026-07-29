@@ -6,7 +6,7 @@ from routes.servico_routes import servico_bp
 from routes.agendamento_routes import agendamento_bp
 from routes.relatorio_routes import relatorio_bp
 from routes.auth_routes import auth_bp 
-  
+
 app = Flask(__name__) 
 CORS(app) 
 app.register_blueprint(cliente_bp) 

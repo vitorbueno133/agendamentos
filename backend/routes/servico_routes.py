@@ -1,28 +1,30 @@
-from flask import Blueprint, jsonify, request
-from services.servico_service import ServicoService
-
-servico_bp = Blueprint("servicos", __name__)
-
-service = ServicoService()
-
-
-@servico_bp.route("/api/servicos", methods=["GET"])
-def listar_servicos():
-    return jsonify([vars(s) for s in service.listar_servicos()])
-
-
-@servico_bp.route("/api/servicos", methods=["POST"])
-def criar_servico():
-    dados = request.get_json()
-
-    try:
-        servico = service.adicionar_servico(
-            dados["nome"],
-            dados["duracao_minutos"],
-            dados["preco"],
-        )
-
-        return jsonify(vars(servico)), 201
-
-    except (ValueError, KeyError) as erro:
-        return jsonify({"erro": str(erro)}), 400
+import csv 
+import io
+from flask import Blueprint, jsonify, Response 
+from services.agendamento_service import AgendamentoService 
+  
+relatorio_bp = Blueprint("relatorios", __name__) 
+service = AgendamentoService() 
+  
+  
+@relatorio_bp.route("/api/relatorios/faturamento", 
+methods=["GET"]) 
+def faturamento(): 
+    return jsonify(service.relatorio_faturamento()) 
+  
+  
+@relatorio_bp.route("/api/relatorios/faturamento/csv", 
+methods=["GET"]) 
+def faturamento_csv(): 
+    dados = service.relatorio_faturamento() 
+    saida = io.StringIO() 
+    escritor = csv.writer(saida) 
+    escritor.writerow(["Profissional", "Atendimentos", "Faturamento"]) 
+    for linha in dados: 
+        escritor.writerow([linha["profissional"], linha["atendimentos"], linha["faturamento"]]) 
+  
+    return Response( 
+        saida.getvalue(), 
+        mimetype="text/csv", 
+        headers={"Content-Disposition": "attachment; filename=faturamento.csv"}, 
+    )
