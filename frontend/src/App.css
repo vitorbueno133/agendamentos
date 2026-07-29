@@ -398,3 +398,173 @@ td button {
     font-size: 13px;
   }
 }
+
+/* ==========================================================================
+   8. Estilização dos Filtros (Filtros Agenda)
+   ========================================================================== */
+.filtros-agenda {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-card);
+  padding: 20px;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.filtros-agenda input,
+.filtros-agenda button {
+  width: 100%;
+  min-height: var(--alvo-toque);
+  padding: 0 16px;
+  font-family: var(--fonte-corpo);
+  font-size: 15px;
+  border-radius: var(--raio-pequeno);
+}
+
+.filtros-agenda input {
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+  border: 1.5px solid var(--cor-borda);
+}
+
+.filtros-agenda button {
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  color: #fff;
+  background: var(--cor-primaria);
+  border: none;
+  cursor: pointer;
+}
+
+/* Responsividade dos Filtros no Desktop */
+@media (min-width: 768px) {
+  .filtros-agenda {
+    flex-direction: row;
+    align-items: center;
+    padding: 24px;
+  }
+  .filtros-agenda input {
+    flex: 1;
+  }
+  .filtros-agenda button {
+    width: auto;
+    padding: 0 24px;
+  }
+}
+
+/* ==========================================================================
+   9. Alinhamento e Cores dos Botões da Tabela (Ações)
+   ========================================================================== */
+.acoes-agendamento {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Botão Concluir na cor verde (usando a variável de sucesso) */
+.botao-concluir {
+  background-color: var(--cor-sucesso) !important;
+  color: #ffffff;
+}
+
+/* Garante que o botão cancelar mantenha a cor de perigo (vermelho) */
+.botao-cancelar {
+  background-color: var(--cor-perigo) !important;
+  color: #ffffff;
+}
+
+/* Ajuste do alinhamento dos botões no mobile para não quebrar a tela */
+@media (max-width: 767px) {
+  .acoes-agendamento {
+    flex-direction: column;
+    width: 100%;
+    margin-top: 12px;
+  }
+  
+  .acoes-agendamento button {
+    width: 100%;
+    margin-top: 0 !important; /* Sobrescreve a margem padrão do mobile */
+  }
+}
+
+/* ==========================================================================
+   10. Estilização dos Alertas de Mensagem (Toasts)
+   ========================================================================== */
+
+/* Estilo base flutuante para o Toast */
+.toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 9999;
+  padding: 16px 24px;
+  border-radius: var(--raio-pequeno);
+  font-family: var(--fonte-corpo);
+  font-weight: 600;
+  font-size: 15px;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  /* Animação de entrada no Desktop */
+  animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* 
+  As classes abaixo estão escritas juntas ("toastsucesso") 
+  para bater exatamente com a interpolação do seu React: \`toast\${toast.tipo}\` 
+*/
+.toastsucesso {
+  background-color: var(--cor-sucesso);
+  border-left: 6px solid #146c3a; /* Borda verde mais escura para dar destaque */
+}
+
+.toasterro {
+  background-color: var(--cor-perigo);
+  border-left: 6px solid #8e1f3b; /* Borda vermelha mais escura para dar destaque */
+}
+
+/* Keyframes de animação para Desktop (desliza da direita) */
+@keyframes slideInToast {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsividade do Toast para Celular */
+@media (max-width: 767px) {
+  .toast {
+    /* No celular, o toast fica na parte de baixo e ocupa quase a tela toda */
+    top: auto;
+    bottom: 24px;
+    right: 16px;
+    left: 16px;
+    text-align: center;
+    justify-content: center;
+    
+    /* Muda a animação para deslizar de baixo para cima */
+    animation: slideUpToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  @keyframes slideUpToast {
+    0% {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

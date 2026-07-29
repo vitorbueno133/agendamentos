@@ -3,25 +3,22 @@ from models.agendamento import Agendamento
 
 
 class AgendamentoRepository:
-    def adicionar(self, agendamento):
-        conexao = conectar()
-        cursor = conexao.cursor()
-        cursor.execute(
-            """INSERT INTO agendamentos
-               (cliente_id, profissional_id,
-               servico_id, data_hora, status)
-               VALUES (%s, %s, %s, %s, %s)""",
-            (
-                agendamento.cliente_id,
-                agendamento.profissional_id,
-                agendamento.servico_id,
-                agendamento.data_hora,
-                agendamento.status,
-            ),
-        )
-        conexao.commit()
-        cursor.close()
-        conexao.close()
+    def adicionar(self, agendamento): 
+        conexao = conectar() 
+        cursor = conexao.cursor() 
+        cursor.execute( 
+        """INSERT INTO agendamentos(cliente_id, profissional_id, servico_id, data_hora, status) 
+                    VALUES (%s, %s, %s, %s, %s) RETURNING id""", 
+                    (agendamento.cliente_id, agendamento.profissional_id, agendamento.servico_id, agendamento.data_hora, agendamento.status), 
+                ) 
+        novo_id = cursor.fetchone()[0] 
+        
+        conexao.commit() 
+        cursor.close() 
+        conexao.close() 
+        agendamento.id = novo_id 
+        
+        return agendamento
 
     def listar_por_profissional_e_data(
         self, profissional_id, data_hora
@@ -53,6 +50,30 @@ class AgendamentoRepository:
         cursor.close() 
         conexao.close() 
         return total > 0
+
+
+    def listar_conflitos(self, profissional_id, inicio, fim): 
+            conexao = conectar() 
+            cursor = conexao.cursor() 
+            cursor.execute( 
+                """SELECT a.id, a.cliente_id, 
+                a.profissional_id, a.servico_id, 
+                a.data_hora, a.status 
+                FROM agendamentos a 
+                JOIN servicos s ON s.id = a.servico_id 
+                WHERE a.profissional_id = %s 
+                AND a.status != 'cancelado' 
+                AND a.data_hora < %s 
+                AND a.data_hora + (s.duracao_minutos 
+                * INTERVAL '1 minute') > %s""", 
+                (profissional_id, fim, inicio), 
+                )
+            linhas = cursor.fetchall() 
+            cursor.close() 
+            conexao.close() 
+            return [Agendamento(*linha) for linha in 
+    linhas] 
+
 
     def listar_por_profissional_e_periodo(self, profissional_id, inicio, fim):
         conexao = conectar()
@@ -121,29 +142,10 @@ class AgendamentoRepository:
         )
 
         linhas = cursor.fetchall()
-
         cursor.close()
         conexao.close()
-
         return [Agendamento(*linha) for linha in linhas]
 
-    def faturamento_por_profissional(self): 
-        conexao = conectar() 
-        cursor = conexao.cursor() 
-        cursor.execute( 
-            """SELECT p.nome, COUNT(a.id), 
-                COALESCE(SUM(s.preco), 0) 
-               FROM agendamentos a 
-               JOIN profissionais p ON p.id = a.profissional_id 
-               JOIN servicos s ON s.id = a.servico_id 
-               WHERE a.status = 'concluido' 
-               GROUP BY p.nome 
-               ORDER BY p.nome""" 
-        ) 
-        linhas = cursor.fetchall() 
-        cursor.close() 
-        conexao.close() 
-        return linhas
 
     def listar_todos_detalhado(self): 
         conexao = conectar() 
@@ -177,3 +179,9 @@ class AgendamentoRepository:
         cursor.close() 
         conexao.close() 
         return linhas 
+
+
+
+    
+  
+   

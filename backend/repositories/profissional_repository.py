@@ -7,12 +7,16 @@ class ProfissionalRepository:
         conexao = conectar() 
         cursor = conexao.cursor() 
         cursor.execute( 
-            "INSERT INTO profissionais (nome, especialidade) VALUES (%s, %s)", 
-            (profissional.nome, profissional.especialidade), 
+            "INSERT INTO profissionais (nome, especialidade) VALUES (%s, %s) RETURNING id", 
+            (profissional.nome, 
+profissional.especialidade), 
         ) 
+        novo_id = cursor.fetchone()[0] 
         conexao.commit() 
         cursor.close() 
         conexao.close() 
+        profissional.id = novo_id 
+        return profissional 
   
     def listar_todos(self): 
         conexao = conectar() 
@@ -21,4 +25,4 @@ class ProfissionalRepository:
         linhas = cursor.fetchall() 
         cursor.close() 
         conexao.close() 
-        return [Profissional(*linha) for linha in linhas] 
+        return [Profissional(*linha) for linha in linhas]

@@ -47,3 +47,13 @@ methods=["GET"])
 @token_obrigatorio
 def listar(): 
     return jsonify(service.listar_agendamentos())
+
+@agendamento_bp.route("/api/agendamentos/<int:agendamento_id>/concluir", 
+methods=["POST"]) 
+@token_obrigatorio
+def concluir(agendamento_id): 
+    try: 
+        service.concluir_agendamento(agendamento_id) 
+        return jsonify({"mensagem": "Agendamento concluido."}) 
+    except ValueError as erro: 
+        return jsonify({"erro": str(erro)}), 400

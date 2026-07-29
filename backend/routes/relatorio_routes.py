@@ -17,6 +17,7 @@ def faturamento():
   
 @relatorio_bp.route("/api/relatorios/faturamento/csv", 
 methods=["GET"]) 
+
 def faturamento_csv(): 
     dados = service.relatorio_faturamento() 
     saida = io.StringIO() 

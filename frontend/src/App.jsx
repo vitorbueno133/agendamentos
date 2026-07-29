@@ -6,36 +6,37 @@ import ClienteList from "./components/ClienteList";
 import ClienteForm from "./components/ClienteForm"; 
 import ProfissionalList from "./components/ProfissionalList"; 
 import ProfissionalForm from "./components/ProfissionalForm"; 
-import ServicoList from "./components/ServicoList";
+import ServicoList from "./components/ServicoList"; 
 import ServicoForm from "./components/ServicoForm"; 
-import LoginForm from "./components/LoginForm";
-import RelatorioFaturamento from "./components/RelatorioFaturamento"; 
 import { 
   listarClientes, criarCliente, 
   listarProfissionais, criarProfissional, 
   listarServicos, criarServico, 
-  listarAgendamentos, criarAgendamento, cancelarAgendamento, estaLogado, sair, concluirAgendamento,
+  listarAgendamentos, criarAgendamento, cancelarAgendamento, concluirAgendamento, estarLogado, sair,
 } from "./services/api"; 
 import "./App.css";
+import LoginForm from "./components/LoginForm";
+import RelatorioFaturamento from "./components/RelatorioFaturamento"; 
   
 function App() { 
-  const [logado, setLogado] = useState(estaLogado());
   const [telaAtiva, setTelaAtiva] = useState("agenda"); 
   const [clientes, setClientes] = useState([]); 
   const [profissionais, setProfissionais] = useState([]); 
   const [servicos, setServicos] = useState([]); 
   const [agendamentos, setAgendamentos] = useState([]); 
   const [erro, setErro] = useState(null); 
+  const [logado, setLogado] = useState(estarLogado()); 
   
-  useEffect(() => { 
+ useEffect(() => { 
   if (!logado) return; 
   listarClientes().then(setClientes); 
   listarProfissionais().then(setProfissionais); 
   listarServicos().then(setServicos); 
   listarAgendamentos().then(setAgendamentos); 
 }, [logado]);
+  
 
-  if (!logado) { 
+if (!logado) { 
   return <LoginForm aoEntrar={() => setLogado(true)} 
 />; 
 } 
@@ -51,11 +52,9 @@ function App() {
   } 
   
   async function 
-adicionarProfissional(novoProfissional) { 
-    try {
-       setErro(null); 
-      const criado = await 
-criarProfissional(novoProfissional); 
+    adicionarProfissional(novoProfissional) { 
+    try {  setErro(null); 
+      const criado = await criarProfissional(novoProfissional); 
       setProfissionais([...profissionais, criado]); 
     } catch (e) { 
       setErro(e.message); 
@@ -72,8 +71,7 @@ criarProfissional(novoProfissional);
     } 
   } 
   
-  async function adicionarAgendamento(novoAgendamento) 
-{ 
+  async function adicionarAgendamento(novoAgendamento) { 
     try { 
       setErro(null); 
       await criarAgendamento(novoAgendamento); 
@@ -92,29 +90,27 @@ criarProfissional(novoProfissional);
     setErro(e.message); 
   } 
 } 
-
- async function concluirAgendamentoNaTela(id) { 
-    try { 
-      setErro(null); 
-      await concluirAgendamento(id); 
-      listarAgendamentos().then(setAgendamentos); 
-    } catch (e) { 
-      setErro(e.message); 
-    } 
-  } 
   
+async function concluirAgendamentoNaTela(id) { 
+  try { 
+  setErro(null); 
+  await concluirAgendamento(id); 
+  listarAgendamentos().then(setAgendamentos); 
+  } catch (e) { 
+  setErro(e.message); 
+} 
+}
+
   return ( 
     <div> 
-      <Menu telaAtiva={telaAtiva} 
-aoTrocarTela={setTelaAtiva} /> 
-
-<button className="botao-sair" onClick={() => { 
-sair(); setLogado(false); }}> 
-  Sair 
-</button> 
-
+      <Menu telaAtiva={telaAtiva} aoTrocarTela={setTelaAtiva} /> 
       {erro && <p style={{ color: "red" }}>{erro}</p>} 
-  
+
+
+  <button className="botao-sair" onClick={() => { 
+sair(); setLogado(false); }}> Sair </button> 
+
+
       {telaAtiva === "agenda" && ( 
         <div> 
           <h1>Agenda</h1>
@@ -125,9 +121,8 @@ sair(); setLogado(false); }}>
             aoSalvar={adicionarAgendamento} 
           /> 
           <AgendaList agendamentos={agendamentos} 
-          aoCancelar={cancelarAgendamentoNaTela} 
-          aoConcluir={concluirAgendamentoNaTela} /> 
-          
+aoCancelar={cancelarAgendamentoNaTela} 
+aoConcluir={concluirAgendamentoNaTela} /> 
         </div> 
       )} 
   
@@ -157,12 +152,12 @@ sair(); setLogado(false); }}>
 
       {telaAtiva === "relatorios" && ( 
         <div> 
-          <h1>Relatorio de faturamento</h1> 
-          <RelatorioFaturamento /> 
+        <h1>Relatório de Faturamento</h1> 
+        <RelatorioFaturamento /> 
         </div> 
       )} 
-
     </div> 
   ); 
 } 
+  
 export default App; 

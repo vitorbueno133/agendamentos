@@ -1,5 +1,6 @@
-import { useState } from "react";
-  function ServicoForm({ aoSalvar }) { 
+import { useState } from "react"; 
+  
+function ServicoForm({ aoSalvar }) { 
   const [nome, setNome] = useState(""); 
   const [duracaoMinutos, setDuracaoMinutos] = 
 useState(""); 
@@ -9,8 +10,8 @@ useState("");
     evento.preventDefault(); 
     aoSalvar({ 
       nome, 
-      duracao_minutos: Number(duracaoMinutos), 
-      preco: Number(preco), 
+      duracao_minutos: Number(duracaoMinutos),
+       preco: Number(preco), 
     }); 
     setNome(""); 
     setDuracaoMinutos(""); 
@@ -28,8 +29,7 @@ useState("");
         placeholder="Duração (minutos)" 
         type="number" 
         value={duracaoMinutos} 
-        onChange={(e) => 
-setDuracaoMinutos(e.target.value)} 
+        onChange={(e) => setDuracaoMinutos(e.target.value)} 
       /> 
       <input 
         placeholder="Preço" 
@@ -37,8 +37,8 @@ setDuracaoMinutos(e.target.value)}
         value={preco} 
         onChange={(e) => setPreco(e.target.value)} 
       /> 
-      <button type="submit">Salvar</button>
-       </form> 
+      <button type="submit">Salvar</button> 
+    </form> 
   ); 
 } 
   

@@ -1,9 +1,9 @@
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-  
+
 export async function buscarStatus() { 
-  const resposta = await 
+const resposta = await 
 fetch(`${BASE_URL}/api/status`); 
-  return resposta.json(); 
+return resposta.json();
 } 
   
 export async function listarClientes() { 
@@ -24,7 +24,29 @@ fetch(`${BASE_URL}/api/clientes`, {
     throw new Error(dados.erro || "Erro ao criar cliente."); 
   } 
   return dados; 
+}
+
+export async function listarAgendamentos() { 
+  const resposta = await 
+fetch(`${BASE_URL}/api/agendamentos`, { 
+    headers: cabecalhoAutenticado(), 
+  }); 
+  return resposta.json(); 
 } 
+  
+export async function criarAgendamento(agendamento) { 
+  const resposta = await 
+fetch(`${BASE_URL}/api/agendamentos`, { 
+    method: "POST", 
+    headers: { "Content-Type": "application/json", ...cabecalhoAutenticado() }, 
+    body: JSON.stringify(agendamento), 
+  }); 
+  const dados = await resposta.json(); 
+  if (!resposta.ok) { 
+ throw new Error(dados.erro || "Erro ao criar agendamento."); 
+  } 
+  return dados; 
+}
 
 export async function listarProfissionais() { 
   const resposta = await 
@@ -44,8 +66,8 @@ fetch(`${BASE_URL}/api/profissionais`, {
   if (!resposta.ok) { 
     throw new Error(dados.erro || "Erro ao criar profissional."); 
   } 
-  return dados; 
-} 
+  return dados;
+  } 
   
 export async function listarServicos() { 
   const resposta = await 
@@ -56,7 +78,7 @@ fetch(`${BASE_URL}/api/servicos`);
 export async function criarServico(servico) { 
   const resposta = await 
 fetch(`${BASE_URL}/api/servicos`, { 
- method: "POST", 
+    method: "POST", 
     headers: { "Content-Type": "application/json" }, 
     body: JSON.stringify(servico), 
   }); 
@@ -66,41 +88,6 @@ fetch(`${BASE_URL}/api/servicos`, {
   } 
   return dados; 
 }
-
-export async function listarAgendamentos() { 
-  const resposta = await 
-fetch(`${BASE_URL}/api/agendamentos`, { 
-    headers: cabecalhoAutenticado(), 
-  }); 
-  return resposta.json(); 
-} 
-  
-export async function criarAgendamento(agendamento) { 
-  const resposta = await 
-fetch(`${BASE_URL}/api/agendamentos`, { 
-    method: "POST", 
-    headers: { "Content-Type": "application/json", ...cabecalhoAutenticado() }, 
-    body: JSON.stringify(agendamento), 
-  }); 
-  const dados = await resposta.json(); 
-  if (!resposta.ok) {
-     throw new Error(dados.erro || "Erro ao criar agendamento."); 
-  } 
-  return dados; 
-}
-
-export async function cancelarAgendamento(id) { 
-  const resposta = await 
-fetch(`${BASE_URL}/api/agendamentos/${id}/cancelar`, { 
-  method: "POST",
-  headers: cabecalhoAutenticado(),
-}); 
-const dados = await resposta.json(); 
-if (!resposta.ok) {
-   throw new Error(dados.erro || "Erro ao cancelar agendamento."); 
-  } 
-  return dados; 
-} 
 
 export async function concluirAgendamento(id) { 
   const resposta = await 
@@ -113,7 +100,22 @@ fetch(`${BASE_URL}/api/agendamentos/${id}/concluir`, {
     throw new Error(dados.erro || "Erro ao concluir agendamento."); 
   } 
   return dados; 
+}
+
+export async function cancelarAgendamento(id) { 
+const resposta = await 
+fetch(`${BASE_URL}/api/agendamentos/${id}/cancelar`, { 
+method: "POST",
+headers: cabecalhoAutenticado(),
+}); 
+const dados = await resposta.json(); 
+if (!resposta.ok) { 
+throw new Error(dados.erro || "Erro ao cancelar agendamento."); 
 } 
+return dados; 
+}
+
+
 export async function login(email, senha) { 
 const resposta = await 
 fetch(`${BASE_URL}/api/login`, { 
@@ -124,12 +126,12 @@ body: JSON.stringify({ email, senha }),
 const dados = await resposta.json(); 
 if (!resposta.ok) { 
 throw new Error(dados.erro || "Nao foi possivel entrar."); 
-} 
+}
  localStorage.setItem("token", dados.token); 
   return dados; 
 } 
   
-export function estaLogado() { 
+export function estarLogado() { 
   return localStorage.getItem("token") !== null; 
 } 
   
@@ -138,8 +140,8 @@ export function sair() {
 } 
   
 export function cabecalhoAutenticado() { 
-  return { Authorization: `Bearer ${localStorage.getItem("token")}` };
-}
+  return { Authorization: `Bearer ${localStorage.getItem("token")}` }; 
+} 
 
 export async function buscarFaturamento() { 
   const resposta = await 
