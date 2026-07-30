@@ -144,9 +144,6 @@ export function cabecalhoAutenticado() {
 } 
 
 
-
-// ... (mantenha todo o seu código api.js existente acima e adicione isto no final)[cite: 30]
-
 export async function atualizarCliente(id, cliente) {
   const resposta = await fetch(`${BASE_URL}/api/clientes/${id}`, {
     method: "PUT",
