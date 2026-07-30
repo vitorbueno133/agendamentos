@@ -33,3 +33,31 @@ class ClienteRepository:
         conexao.commit() 
         cursor.close() 
         conexao.close()
+
+
+    def atualizar(self, cliente):
+        conexao = conectar()
+        cursor = conexao.cursor()
+
+        cursor.execute(
+            """
+            UPDATE clientes
+            SET nome = %s,
+                telefone = %s,
+                email = %s
+            WHERE id = %s
+            """,
+            (
+                cliente.nome,
+                cliente.telefone,
+                cliente.email,
+                cliente.id,
+            ),
+        )
+
+        conexao.commit()
+
+        cursor.close()
+        conexao.close()
+
+        return cliente

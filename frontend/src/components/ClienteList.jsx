@@ -1,4 +1,4 @@
-function ClienteList({ clientes }) { 
+function ClienteList({ clientes, aoEditar, aoExcluir }) { 
   return ( 
     <table> 
       <thead> 
@@ -6,6 +6,7 @@ function ClienteList({ clientes }) {
           <th>Nome</th> 
           <th>Telefone</th> 
           <th>E-mail</th> 
+          <th>Ações</th>
         </tr> 
       </thead> 
       <tbody> 
@@ -14,6 +15,10 @@ function ClienteList({ clientes }) {
             <td>{cliente.nome}</td> 
             <td>{cliente.telefone}</td> 
             <td>{cliente.email}</td> 
+            <td className="acoes-agendamento">
+              <button className="botao-concluir" onClick={() => aoEditar(cliente)}>Editar</button>
+              <button className="botao-cancelar" onClick={() => aoExcluir(cliente)}>Excluir</button>
+            </td>
           </tr> 
         ))} 
       </tbody> 

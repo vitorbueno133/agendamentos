@@ -568,3 +568,362 @@ td button {
     }
   }
 }
+
+/* ==========================================================================
+   10. Estilização dos Alertas de Mensagem (Toasts) - CORRIGIDO
+   ========================================================================== */
+.toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 9999;
+  padding: 16px 24px;
+  border-radius: var(--raio-pequeno);
+  font-family: var(--fonte-corpo);
+  font-weight: 600;
+  font-size: 15px;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Classes corrigidas COM o traço para bater com o Toast.jsx */
+.toast-sucesso {
+  background-color: var(--cor-sucesso);
+  border-left: 6px solid #146c3a;
+}
+
+.toast-erro {
+  background-color: var(--cor-perigo);
+  border-left: 6px solid #8e1f3b;
+}
+
+@keyframes slideInToast {
+  0% { opacity: 0; transform: translateX(100%); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@media (max-width: 767px) {
+  .toast {
+    top: auto;
+    bottom: 24px;
+    right: 16px;
+    left: 16px;
+    text-align: center;
+    justify-content: center;
+    animation: slideUpToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  @keyframes slideUpToast {
+    0% { opacity: 0; transform: translateY(100%); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* ==========================================================================
+   11. Estilização do Modal de Confirmação (ConfirmDialog)
+   ========================================================================== */
+/* Fundo escuro que bloqueia a tela */
+.modal-fundo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(34, 28, 41, 0.65);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000; 
+}
+
+/* O card branco flutuante */
+.modal-card {
+  background-color: var(--cor-superficie);
+  width: 90%;
+  max-width: 400px;
+  padding: 28px 24px;
+  border-radius: var(--raio);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  animation: popInModal 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.modal-mensagem {
+  font-family: var(--fonte-corpo);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--cor-texto);
+  margin-top: 0;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* Organização dos botões lado a lado */
+.modal-acoes {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* Botão de OK (Usando vermelho porque é para exclusão) */
+.botao-confirmar {
+  background-color: var(--cor-perigo);
+  color: #fff;
+  border: none;
+  padding: 0 20px;
+  min-height: var(--alvo-toque);
+  border-radius: var(--raio-pequeno);
+  font-family: var(--fonte-titulo);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  flex: 1;
+  transition: background-color 0.2s ease;
+}
+
+.botao-confirmar:hover {
+  background-color: var(--cor-perigo-hover);
+}
+
+/* Botão Cancelar */
+.botao-secundario {
+  background-color: transparent;
+  color: var(--cor-texto-suave);
+  border: 1.5px solid var(--cor-borda);
+  padding: 0 20px;
+  min-height: var(--alvo-toque);
+  border-radius: var(--raio-pequeno);
+  font-family: var(--fonte-titulo);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  flex: 1;
+  transition: all 0.2s ease;
+}
+
+.botao-secundario:hover {
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  border-color: var(--cor-texto-suave);
+}
+
+@keyframes popInModal {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 767px) {
+  .modal-acoes {
+    flex-direction: column-reverse;
+  }
+}
+
+/* ==========================================================================
+   12. Relatório de Faturamento (Filtros, Cards e Botões)
+   ========================================================================== */
+
+/* Container de Filtros */
+.filtros-relatorio {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-card);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+/* Labels e Campos de Data */
+.filtros-relatorio label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--fonte-titulo);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cor-texto);
+}
+
+.filtros-relatorio input[type="date"] {
+  min-height: var(--alvo-toque);
+  padding: 0 16px;
+  font-family: var(--fonte-corpo);
+  font-size: 15px;
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+  border: 1.5px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.filtros-relatorio input[type="date"]:focus {
+  border-color: var(--cor-primaria);
+}
+
+/* Botões dentro do filtro (Este mês, Todo o período) */
+.filtros-relatorio button {
+  background-color: var(--cor-primaria-clara);
+  color: var(--cor-primaria);
+  border: none;
+  padding: 0 16px;
+  min-height: var(--alvo-toque);
+  border-radius: var(--raio-pequeno);
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filtros-relatorio button:hover {
+  background-color: var(--cor-primaria-borda);
+}
+
+/* Responsividade dos Filtros */
+@media (min-width: 768px) {
+  .filtros-relatorio {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+  .filtros-relatorio label {
+    flex: 1;
+  }
+  .filtros-relatorio button {
+    flex: 1;
+    max-width: 200px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Cards de Resumo (Faturamento, Atendimentos, Ticket)
+   -------------------------------------------------------------------------- */
+.cards-resumo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: 20px;
+  box-shadow: var(--sombra-card);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card span {
+  color: var(--cor-texto-suave);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.card strong {
+  color: var(--cor-primaria);
+  font-size: 24px;
+  font-family: var(--fonte-titulo);
+}
+
+@media (min-width: 768px) {
+  .cards-resumo {
+    flex-direction: row;
+  }
+  .card {
+    flex: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Botões de Ação Final (Baixar Excel, Baixar CSV, Atualizar)
+   -------------------------------------------------------------------------- */
+/* Garante que os links funcionem visualmente como botões */
+a.botao,
+a.botao-secundario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+/* Botão principal (usando a cor verde de sucesso para os downloads) */
+.botao {
+  background-color: var(--cor-sucesso);
+  color: #ffffff;
+  padding: 0 24px;
+  min-height: var(--alvo-toque);
+  border-radius: var(--raio-pequeno);
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 12px;
+  margin-right: 12px;
+  transition: filter 0.2s ease;
+}
+
+.botao:hover {
+  filter: brightness(0.9);
+}
+
+/* Botão secundário (fundo transparente, borda suave) */
+.botao-secundario {
+  background-color: transparent;
+  color: var(--cor-texto-suave);
+  padding: 0 24px;
+  min-height: var(--alvo-toque);
+  border-radius: var(--raio-pequeno);
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  font-size: 15px;
+  border: 1.5px solid var(--cor-borda);
+  cursor: pointer;
+  margin-bottom: 12px;
+  margin-right: 12px;
+  transition: all 0.2s ease;
+}
+
+.botao-secundario:hover {
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  border-color: var(--cor-texto-suave);
+}
+
+/* Para o botão "Atualizar" que não tem classe específica no seu código */
+a.botao-secundario + button {
+  background-color: var(--cor-primaria);
+  color: #ffffff;
+  padding: 0 24px;
+  min-height: var(--alvo-toque);
+  border-radius: var(--raio-pequeno);
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: background-color 0.2s ease;
+}
+
+a.botao-secundario + button:hover {
+  background-color: var(--cor-primaria-hover);
+}
+
+@media (max-width: 767px) {
+  /* No celular, os botões de ação ocupam a largura total */
+  .botao, .botao-secundario, a.botao-secundario + button {
+    width: 100%;
+    margin-right: 0;
+  }
+}

@@ -3,8 +3,7 @@ import { useState } from "react";
 function NovoAgendamentoForm({ clientes, 
 profissionais, servicos, aoSalvar }) { 
   const [clienteId, setClienteId] = useState(""); 
-  const [profissionalId, setProfissionalId] = 
-useState(""); 
+  const [profissionalId, setProfissionalId] = useState(""); 
   const [servicoId, setServicoId] = useState(""); 
   const [dataHora, setDataHora] = useState(""); 
   

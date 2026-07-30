@@ -180,7 +180,37 @@ class AgendamentoRepository:
         conexao.close() 
         return linhas 
 
+    def existe_agendamento_para_profissional(self, profissional_id):
+        conexao = conectar()
+        cursor = conexao.cursor()
 
+        cursor.execute(
+            "SELECT COUNT(*) FROM agendamentos WHERE profissional_id = %s",
+            (profissional_id,),
+        )
+
+        total = cursor.fetchone()[0]
+
+        cursor.close()
+        conexao.close()
+
+        return total > 0
+
+    def existe_agendamento_para_servico(self, servico_id):
+        conexao = conectar()
+        cursor = conexao.cursor()
+
+        cursor.execute(
+            "SELECT COUNT(*) FROM agendamentos WHERE servico_id = %s",
+            (servico_id,),
+        )
+
+        total = cursor.fetchone()[0]
+
+        cursor.close()
+        conexao.close()
+
+        return total > 0
 
     
   

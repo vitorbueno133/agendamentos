@@ -11,7 +11,7 @@ export async function listarClientes() {
 fetch(`${BASE_URL}/api/clientes`); 
   return resposta.json(); 
 } 
-  
+
 export async function criarCliente(cliente) { 
   const resposta = await 
 fetch(`${BASE_URL}/api/clientes`, { 
@@ -143,14 +143,95 @@ export function cabecalhoAutenticado() {
   return { Authorization: `Bearer ${localStorage.getItem("token")}` }; 
 } 
 
-export async function buscarFaturamento() { 
+
+
+// ... (mantenha todo o seu código api.js existente acima e adicione isto no final)[cite: 30]
+
+export async function atualizarCliente(id, cliente) {
+  const resposta = await fetch(`${BASE_URL}/api/clientes/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(cliente),
+  });
+  const dados = await resposta.json();
+  if (!resposta.ok) throw new Error(dados.erro || "Erro ao atualizar cliente.");
+  return dados;
+}
+
+export async function deletarCliente(id) {
+  const resposta = await fetch(`${BASE_URL}/api/clientes/${id}`, { method: "DELETE" });
+  if (!resposta.ok) {
+    const dados = await resposta.json();
+    throw new Error(dados.erro || "Erro ao deletar cliente.");
+  }
+}
+
+export async function atualizarProfissional(id, profissional) {
+  const resposta = await fetch(`${BASE_URL}/api/profissionais/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(profissional),
+  });
+  const dados = await resposta.json();
+  if (!resposta.ok) throw new Error(dados.erro || "Erro ao atualizar profissional.");
+  return dados;
+}
+
+export async function deletarProfissional(id) {
+  const resposta = await fetch(`${BASE_URL}/api/profissionais/${id}`, { method: "DELETE" });
+  if (!resposta.ok) {
+    const dados = await resposta.json();
+    throw new Error(dados.erro || "Erro ao deletar profissional.");
+  }
+}
+
+export async function atualizarServico(id, servico) {
+  const resposta = await fetch(`${BASE_URL}/api/servicos/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(servico),
+  });
+  const dados = await resposta.json();
+  if (!resposta.ok) throw new Error(dados.erro || "Erro ao atualizar serviço.");
+  return dados;
+}
+
+export async function deletarServico(id) {
+  const resposta = await fetch(`${BASE_URL}/api/servicos/${id}`, { method: "DELETE" });
+  if (!resposta.ok) {
+    const dados = await resposta.json();
+    throw new Error(dados.erro || "Erro ao deletar serviço.");
+  }
+}
+
+export async function buscarFaturamento(inicio, fim) { 
+  const params = new URLSearchParams(); 
+  if (inicio) params.set("inicio", inicio); 
+  if (fim) params.set("fim", fim); 
+  const query = params.toString() ? 
+`?${params.toString()}` : ""; 
   const resposta = await 
-fetch(`${BASE_URL}/api/relatorios/faturamento`, { 
+fetch(`${BASE_URL}/api/relatorios/faturamento${query}`, 
+{ 
     headers: cabecalhoAutenticado(), 
   }); 
   return resposta.json(); 
 } 
   
-export function urlExportacaoCsv() { 
-  return `${BASE_URL}/api/relatorios/faturamento/csv`; 
+export function urlExportacaoCsv(inicio, fim) { 
+  const params = new URLSearchParams(); 
+  if (inicio) params.set("inicio", inicio); 
+  if (fim) params.set("fim", fim); 
+  const query = params.toString() ? 
+`?${params.toString()}` : ""; 
+  return `${BASE_URL}/api/relatorios/faturamento/csv${query}`; 
+} 
+  
+export function urlExportacaoExcel(inicio, fim) { 
+  const params = new URLSearchParams(); 
+  if (inicio) params.set("inicio", inicio); 
+  if (fim) params.set("fim", fim); 
+  const query = params.toString() ? 
+`?${params.toString()}` : ""; 
+  return `${BASE_URL}/api/relatorios/faturamento/excel${query}`; 
 } 

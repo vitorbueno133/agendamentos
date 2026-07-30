@@ -26,3 +26,41 @@ profissional.especialidade),
         cursor.close() 
         conexao.close() 
         return [Profissional(*linha) for linha in linhas]
+
+    def atualizar(self, profissional):
+        conexao = conectar()
+        cursor = conexao.cursor()
+
+        cursor.execute(
+            """
+            UPDATE profissionais
+            SET nome = %s,
+                especialidade = %s
+            WHERE id = %s
+            """,
+            (
+                profissional.nome,
+                profissional.especialidade,
+                profissional.id,
+            ),
+        )
+
+        conexao.commit()
+
+        cursor.close()
+        conexao.close()
+
+        return profissional
+
+    def remover(self, profissional_id):
+        conexao = conectar()
+        cursor = conexao.cursor()
+
+        cursor.execute(
+            "DELETE FROM profissionais WHERE id = %s", (profissional_id,),
+        )
+
+        conexao.commit()
+
+        cursor.close()
+        conexao.close()

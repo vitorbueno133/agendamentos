@@ -80,7 +80,6 @@ class AgendamentoService:
 
 
     def listar_agendamentos(self):
-        
         linhas = self.repository.listar_todos_detalhado() 
         return [ 
             { 
@@ -89,6 +88,7 @@ class AgendamentoService:
             } 
             for id_, cliente, profissional, servico, data_hora, status in linhas 
         ] 
+
 
     def relatorio_faturamento(self): 
         linhas = self.repository.faturamento_por_profissional() 

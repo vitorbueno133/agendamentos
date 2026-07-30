@@ -1,21 +1,35 @@
-import { useState } from "react"; 
+import { useState, useEffect } from "react"; 
   
-function ServicoForm({ aoSalvar }) { 
+function ServicoForm({ aoSalvar, emEdicao }) { 
   const [nome, setNome] = useState(""); 
-  const [duracaoMinutos, setDuracaoMinutos] = 
-useState(""); 
+  const [duracaoMinutos, setDuracaoMinutos] = useState(""); 
   const [preco, setPreco] = useState(""); 
+
+  useEffect(() => {
+    if (emEdicao) {
+      setNome(emEdicao.nome || "");
+      setDuracaoMinutos(emEdicao.duracao_minutos || "");
+      setPreco(emEdicao.preco || "");
+    } else {
+      setNome(""); 
+      setDuracaoMinutos(""); 
+      setPreco("");
+    }
+  }, [emEdicao]);
   
   function handleSubmit(evento) { 
     evento.preventDefault(); 
     aoSalvar({ 
+      id: emEdicao?.id,
       nome, 
       duracao_minutos: Number(duracaoMinutos),
-       preco: Number(preco), 
+      preco: Number(preco), 
     }); 
-    setNome(""); 
-    setDuracaoMinutos(""); 
-    setPreco(""); 
+    if (!emEdicao) {
+      setNome(""); 
+      setDuracaoMinutos(""); 
+      setPreco(""); 
+    }
   } 
   
   return ( 
@@ -37,7 +51,7 @@ useState("");
         value={preco} 
         onChange={(e) => setPreco(e.target.value)} 
       /> 
-      <button type="submit">Salvar</button> 
+      <button type="submit">{emEdicao ? "Atualizar" : "Salvar"}</button> 
     </form> 
   ); 
 } 

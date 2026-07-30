@@ -18,4 +18,23 @@ def criar_cliente():
         ) 
         return jsonify(vars(cliente)), 201 
     except (ValueError, KeyError) as erro: 
-        return jsonify({"erro": str(erro)}), 400 
+        return jsonify({"erro": str(erro)}), 400
+
+@cliente_bp.route("/api/clientes/<int:cliente_id>", methods=["PUT"])
+def atualizar_cliente(cliente_id):
+    dados = request.get_json()
+    try:
+        cliente = service.atualizar_cliente(
+            cliente_id, dados["nome"], dados.get("telefone"), dados["email"]
+        )
+        return jsonify(vars(cliente)), 200
+    except (ValueError, KeyError) as erro:
+        return jsonify({"erro": str(erro)}), 400
+
+@cliente_bp.route("/api/clientes/<int:cliente_id>", methods=["DELETE"])
+def remover_cliente(cliente_id):
+    try:
+        service.remover_cliente(cliente_id)
+        return '', 204
+    except ValueError as erro:
+        return jsonify({"erro": str(erro)}), 400
