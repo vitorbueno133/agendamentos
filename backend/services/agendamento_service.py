@@ -102,3 +102,10 @@ class AgendamentoService:
             }
             for profissional_id, nome, total, faturamento in linhas
         ]
+
+    def _iso(valor): 
+        """Converte data/hora para o formato ISO (2026-0730T10:00). Sem esta conversao, o Flask serializa a data no formato HTTP ("Thu, 30 Jul 2026 10:00:00 GMT"), que o 
+        JavaScript interpreta como UTC e exibe com o fuso trocado."""
+        if hasattr(valor, "isoformat"): 
+            return valor.isoformat(timespec="minutes") 
+        return valor 

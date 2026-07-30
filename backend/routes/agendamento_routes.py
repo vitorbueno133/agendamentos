@@ -5,6 +5,15 @@ from routes.auth_routes import token_obrigatorio
 agendamento_bp = Blueprint("agendamentos", __name__)
 service = AgendamentoService()
 
+def _serializar(agendamento): 
+    """Transforma um Agendamento em dicionario, com a 
+    data ISO."""
+    dados = vars(agendamento).copy() 
+    if hasattr(dados.get("data_hora"), "isoformat"): 
+        dados["data_hora"] = dados["data_hora"].isoformat( 
+            timespec="minutes" 
+        ) 
+    return dados 
 
 @agendamento_bp.route("/api/agendamentos", methods=["POST"])
 @token_obrigatorio
@@ -19,10 +28,13 @@ def criar_agendamento():
             dados["data_hora"],
         )
 
-        return jsonify(vars(agendamento)), 201
+        return jsonify(_serializar(agendamento)), 201
 
     except (ValueError, KeyError) as erro:
         return jsonify({"erro": str(erro)}), 400
+
+
+    
 
 @agendamento_bp.route("/api/agendamentos/<int:agendamento_id>/cancelar", 
 methods=["POST"]) 
@@ -40,7 +52,7 @@ methods=["GET"])
 @token_obrigatorio
 def historico(cliente_id): 
     agendamentos = service.historico_do_cliente(cliente_id) 
-    return jsonify([vars(a) for a in agendamentos])
+    return jsonify([_serializar(a) for a in agendamentos])
 
 @agendamento_bp.route("/api/agendamentos", 
 methods=["GET"])
