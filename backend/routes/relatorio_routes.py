@@ -23,8 +23,7 @@ def _periodo():
 @relatorio_bp.route("/api/relatorios/faturamento", methods=["GET"])
 @token_obrigatorio
 def faturamento():
-    inicio, fim = _periodo()
-    return jsonify(service.relatorio_faturamento(inicio, fim))
+    return jsonify(service.relatorio_faturamento())
 
 
 @relatorio_bp.route("/api/relatorios/faturamento/csv", methods=["GET"])
