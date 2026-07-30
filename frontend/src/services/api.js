@@ -1,5 +1,6 @@
 const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:5000";
 
+
 export async function buscarStatus() { 
 const resposta = await 
 fetch(`${BASE_URL}/api/status`); 
