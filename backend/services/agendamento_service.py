@@ -84,7 +84,7 @@ class AgendamentoService:
         return [ 
             { 
                 "id": id_, "cliente": cliente, "profissional": profissional, 
-                "servico": servico, "data_hora": data_hora, "status": status, 
+                "servico": servico, "data_hora": self._iso(data_hora),  "status": status, 
             } 
             for id_, cliente, profissional, servico, data_hora, status in linhas 
         ] 
