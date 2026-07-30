@@ -90,9 +90,15 @@ class AgendamentoService:
         ] 
 
 
-    def relatorio_faturamento(self): 
-        linhas = self.repository.faturamento_por_profissional() 
-        return [ 
-            {"profissional": nome, "atendimentos": total, "faturamento": float(faturamento)} 
-            for nome, total, faturamento in linhas 
-        ] 
+    def relatorio_faturamento(self, inicio=None, fim=None):
+        linhas = self.repository.faturamento_por_profissional(inicio, fim)
+
+        return [
+            {
+                "profissional_id": profissional_id,
+                "profissional": nome,
+                "atendimentos": total,
+                "faturamento": float(faturamento),
+            }
+            for profissional_id, nome, total, faturamento in linhas
+        ]
