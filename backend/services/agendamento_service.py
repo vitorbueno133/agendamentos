@@ -85,14 +85,19 @@ class AgendamentoService:
         return self.repository.historico_do_cliente(cliente_id)
 
 
-    def listar_agendamentos(self):
+    def listar_agendamentos(self): 
         linhas = self.repository.listar_todos_detalhado() 
         return [ 
             { 
-                "id": id_, "cliente": cliente, "profissional": profissional, 
-                "servico": servico, "data_hora": self._iso(data_hora),  "status": status, 
+                "id": id_, 
+                "cliente": cliente, 
+                "profissional": profissional, 
+                "servico": servico, 
+                "data_hora": _iso(data_hora), 
+                "status": status, 
             } 
-            for id_, cliente, profissional, servico, data_hora, status in linhas 
+            for id_, cliente, profissional, servico, 
+                data_hora, status in linhas 
         ] 
 
 
