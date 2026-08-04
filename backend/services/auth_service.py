@@ -16,7 +16,7 @@ class AuthService:
     def login(self, email, senha): 
         usuario = self.repository.buscar_por_email(email) 
         if usuario is None or not check_password_hash(usuario[3], senha): 
-            raise ValueError("E-mail ou senha invalidos.") 
+            raise ValueError("E-mail ou senha inválidos.") 
         payload = { 
             "usuario_id": usuario[0], 
             "nome": usuario[1], 

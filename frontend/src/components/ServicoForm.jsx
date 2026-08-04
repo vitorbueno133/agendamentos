@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"; 
   
-function ServicoForm({ aoSalvar, emEdicao }) { 
+function ServicoForm({ aoSalvar, emEdicao, carregando }) { 
   const [nome, setNome] = useState(""); 
   const [duracaoMinutos, setDuracaoMinutos] = useState(""); 
   const [preco, setPreco] = useState(""); 
@@ -51,7 +51,9 @@ function ServicoForm({ aoSalvar, emEdicao }) {
         value={preco} 
         onChange={(e) => setPreco(e.target.value)} 
       /> 
-      <button type="submit">{emEdicao ? "Atualizar" : "Salvar"}</button> 
+      <button type="submit" disabled={carregando}>
+        {carregando ? "Aguarde..." : (emEdicao ? "Atualizar" : "Salvar")}
+      </button> 
     </form> 
   ); 
 } 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"; 
 
-function ProfissionalForm({ aoSalvar, emEdicao }) { 
+function ProfissionalForm({ aoSalvar, emEdicao, carregando }) { 
   const [nome, setNome] = useState(""); 
   const [especialidade, setEspecialidade] = useState(""); 
 
@@ -36,7 +36,9 @@ function ProfissionalForm({ aoSalvar, emEdicao }) {
         value={especialidade} 
         onChange={(e) => setEspecialidade(e.target.value)} 
       /> 
-      <button type="submit">{emEdicao ? "Atualizar" : "Salvar"}</button> 
+      <button type="submit" disabled={carregando}>
+        {carregando ? "Aguarde..." : (emEdicao ? "Atualizar" : "Salvar")}
+      </button> 
     </form> 
   ); 
 } 

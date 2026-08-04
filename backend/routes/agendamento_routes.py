@@ -66,6 +66,6 @@ methods=["POST"])
 def concluir(agendamento_id): 
     try: 
         service.concluir_agendamento(agendamento_id) 
-        return jsonify({"mensagem": "Agendamento concluido."}) 
+        return jsonify({"mensagem": "Agendamento concluído."}) 
     except ValueError as erro: 
         return jsonify({"erro": str(erro)}), 400

@@ -1,5 +1,4 @@
-function ConfirmDialog({ aberto, mensagem, 
-aoConfirmar, aoCancelar }) { 
+function ConfirmDialog({ aberto, mensagem, aoConfirmar, aoCancelar, carregando }) { 
   if (!aberto) return null; 
   
   return ( 
@@ -12,12 +11,14 @@ aoConfirmar, aoCancelar }) {
       > 
         <p className="modal-mensagem">{mensagem}</p> 
         <div className="modal-acoes"> 
-          <button className="botao-confirmar" 
-onClick={aoConfirmar}> 
-            OK 
+          <button 
+            className="botao-confirmar" 
+            onClick={aoConfirmar}
+            disabled={carregando}
+          > 
+            {carregando ? "Aguarde..." : "OK"}
           </button> 
-          <button className="botao-secundario" 
-onClick={aoCancelar}> 
+          <button className="botao-secundario" onClick={aoCancelar}> 
             Cancelar 
           </button> 
         </div> 

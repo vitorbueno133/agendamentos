@@ -1,7 +1,6 @@
 import { useState } from "react"; 
   
-function NovoAgendamentoForm({ clientes, 
-profissionais, servicos, aoSalvar }) { 
+function NovoAgendamentoForm({ clientes, profissionais, servicos, aoSalvar, carregando }) { 
   const [clienteId, setClienteId] = useState(""); 
   const [profissionalId, setProfissionalId] = useState(""); 
   const [servicoId, setServicoId] = useState(""); 
@@ -26,16 +25,14 @@ profissionais, servicos, aoSalvar }) {
       <select value={clienteId} onChange={(e) => setClienteId(e.target.value)}> 
         <option value="">Selecione o cliente</option> 
         {clientes.map((c) => ( 
-          <option key={c.id} 
-value={c.id}>{c.nome}</option> 
+          <option key={c.id} value={c.id}>{c.nome}</option> 
         ))} 
       </select> 
   
       <select value={profissionalId} onChange={(e) => setProfissionalId(e.target.value)}> 
         <option value="">Selecione o profissional</option> 
         {profissionais.map((p) => ( 
-          <option key={p.id} 
-value={p.id}>{p.nome}</option> 
+          <option key={p.id} value={p.id}>{p.nome}</option> 
         ))} 
       </select> 
   
@@ -52,7 +49,9 @@ value={p.id}>{p.nome}</option>
         onChange={(e) => setDataHora(e.target.value)} 
       /> 
   
-      <button type="submit">Agendar</button> 
+      <button type="submit" disabled={carregando}>
+        {carregando ? "Aguarde..." : "Agendar"}
+      </button> 
     </form> 
   ); 
 } 

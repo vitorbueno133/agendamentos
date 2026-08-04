@@ -10,6 +10,7 @@ import ServicoList from "./components/ServicoList";
 import ServicoForm from "./components/ServicoForm";
 import Toast from "./components/Toast";
 import ConfirmDialog from "./components/ConfirmDialog";
+import Modal from "./components/Modal";
 import {
   listarClientes, criarCliente, atualizarCliente, deletarCliente,
   listarProfissionais, criarProfissional, atualizarProfissional, deletarProfissional,
@@ -20,6 +21,38 @@ import "./App.css";
 import LoginForm from "./components/LoginForm";
 import RelatorioFaturamento from "./components/RelatorioFaturamento"; 
 
+// Componente Carregando embutido diretamente no App.jsx
+function Carregando({ texto = "Carregando..." }) { 
+  return ( 
+    <div className="carregando">
+      <span className="carregando-icone" />
+      <span>{texto}</span>
+      <style>{`
+        .carregando {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          color: #6b7280;
+          font-size: 14px;
+          margin-bottom: 12px;
+        }
+        .carregando-icone {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          border: 2px solid #e5e7eb;
+          border-top-color: #7a1fa2;
+          display: inline-block;
+          animation: girar 0.8s linear infinite;
+        }
+        @keyframes girar {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
+  ); 
+}
+
 function App() {
   const [telaAtiva, setTelaAtiva] = useState("agenda");
   
@@ -29,23 +62,25 @@ function App() {
   const [servicos, setServicos] = useState([]);
   const [agendamentos, setAgendamentos] = useState([]);
   const [logado, setLogado] = useState(estarLogado()); 
+  
   // Controle de UI
   const [toast, setToast] = useState(null);
+  const [carregando, setCarregando] = useState(false);
+  const [modalAberto, setModalAberto] = useState(false);
   const [editando, setEditando] = useState({ entidade: null, dados: null });
   const [dialogoExclusao, setDialogoExclusao] = useState({ aberto: false, entidade: null, id: null });
 
   useEffect(() => { 
-  if (!logado) return; 
-  listarClientes().then(setClientes); 
-  listarProfissionais().then(setProfissionais); 
-  listarServicos().then(setServicos); 
-  listarAgendamentos().then(setAgendamentos); 
-}, [logado]); 
+    if (!logado) return; 
+    listarClientes().then(setClientes); 
+    listarProfissionais().then(setProfissionais); 
+    listarServicos().then(setServicos); 
+    listarAgendamentos().then(setAgendamentos); 
+  }, [logado]); 
 
-if (!logado) { 
-  return <LoginForm aoEntrar={() => setLogado(true)} 
-/>; 
-} 
+  if (!logado) { 
+    return <LoginForm aoEntrar={() => setLogado(true)} />; 
+  } 
 
   async function carregarDadosIniciais() {
     listarClientes().then(setClientes);
@@ -64,8 +99,23 @@ if (!logado) {
     if (entidade === "servico") listarServicos().then(setServicos);
   }
 
-  // Função centralizada para decidir entre Criar ou Atualizar
+  function abrirModalNovo(entidade) {
+    setEditando({ entidade, dados: null });
+    setModalAberto(true);
+  }
+
+  function abrirModalEditar(entidade, dados) {
+    setEditando({ entidade, dados });
+    setModalAberto(true);
+  }
+
+  function fecharModal() {
+    setModalAberto(false);
+    setEditando({ entidade: null, dados: null });
+  }
+
   async function salvar(entidade, dados) {
+    setCarregando(true);
     try {
       if (entidade === "cliente") {
         dados.id ? await atualizarCliente(dados.id, dados) : await criarCliente(dados);
@@ -75,59 +125,70 @@ if (!logado) {
         dados.id ? await atualizarServico(dados.id, dados) : await criarServico(dados);
       }
 
-      mostrarToast(`${entidade} salvo(a) com sucesso!`, "sucesso");
-      setEditando({ entidade: null, dados: null });
+      mostrarToast(`${entidade.charAt(0).toUpperCase() + entidade.slice(1)} salvo(a) com sucesso!`, "sucesso");
+      fecharModal();
       recarregarLista(entidade);
     } catch (e) {
       mostrarToast(e.message, "erro");
+    } finally {
+      setCarregando(false);
     }
   }
 
-  // Função centralizada para processar a exclusão pelo Modal
   async function confirmarExclusao() {
     const { entidade, id } = dialogoExclusao;
+    setCarregando(true);
     try {
       if (entidade === "cliente") await deletarCliente(id);
       if (entidade === "profissional") await deletarProfissional(id);
       if (entidade === "servico") await deletarServico(id);
 
-      mostrarToast(`${entidade} excluído(a) com sucesso!`, "sucesso");
+      mostrarToast(`${entidade.charAt(0).toUpperCase() + entidade.slice(1)} excluído(a) com sucesso!`, "sucesso");
       recarregarLista(entidade);
     } catch (e) {
       mostrarToast(e.message, "erro");
     } finally {
       setDialogoExclusao({ aberto: false, entidade: null, id: null });
+      setCarregando(false);
     }
   }
 
-  // Funções de Agendamento mantidas conforme original
   async function adicionarAgendamento(novoAgendamento) {
+    setCarregando(true);
     try {
       await criarAgendamento(novoAgendamento);
       mostrarToast("Agendamento criado com sucesso!", "sucesso");
       listarAgendamentos().then(setAgendamentos);
     } catch (e) {
       mostrarToast(e.message, "erro");
+    } finally {
+      setCarregando(false);
     }
   }
 
   async function cancelarAgendamentoNaTela(id) {
+    setCarregando(true);
     try {
       await cancelarAgendamento(id);
       mostrarToast("Agendamento cancelado com sucesso!", "sucesso");
       listarAgendamentos().then(setAgendamentos);
     } catch (e) {
       mostrarToast(e.message, "erro");
+    } finally {
+      setCarregando(false);
     }
   }
 
   async function concluirAgendamentoNaTela(id) {
+    setCarregando(true);
     try {
       await concluirAgendamento(id);
       mostrarToast("Agendamento concluído com sucesso!", "sucesso");
       listarAgendamentos().then(setAgendamentos);
     } catch (e) {
       mostrarToast(e.message, "erro");
+    } finally {
+      setCarregando(false);
     }
   }
 
@@ -141,45 +202,58 @@ if (!logado) {
 
       <ConfirmDialog
         aberto={dialogoExclusao.aberto}
-        mensagem={`Tem certeza que deseja excluir este(a) ${dialogoExclusao.entidade}?`}
+        mensagem={`Tem certeza que deseja excluir este registro?`}
         aoConfirmar={confirmarExclusao}
         aoCancelar={() => setDialogoExclusao({ aberto: false, entidade: null, id: null })}
+        carregando={carregando}
       />
 
-      <Menu telaAtiva={telaAtiva} aoTrocarTela={setTelaAtiva} />
-
-      <button className="botao-sair" onClick={() => { 
-sair(); setLogado(false); }}> 
-Sair 
-</button> 
+      <Menu 
+        telaAtiva={telaAtiva} 
+        aoTrocarTela={setTelaAtiva} 
+        aoSair={() => { sair(); setLogado(false); }} 
+      />
 
       {telaAtiva === "agenda" && (
         <div>
           <h1>Agenda</h1>
-          <NovoAgendamentoForm
-            clientes={clientes}
-            profissionais={profissionais}
-            servicos={servicos}
-            aoSalvar={adicionarAgendamento}
-          />
+          <div style={{ background: "var(--cor-superficie)", padding: "20px", borderRadius: "var(--raio)", marginBottom: "24px", boxShadow: "var(--sombra-card)" }}>
+            <h3 style={{ marginTop: 0, color: "var(--cor-primaria)", textAlign: "center" }}>Novo Agendamento</h3>
+            <NovoAgendamentoForm
+              clientes={clientes}
+              profissionais={profissionais}
+              servicos={servicos}
+              aoSalvar={adicionarAgendamento}
+              carregando={carregando}
+            />
+          </div>
           <AgendaList
             agendamentos={agendamentos}
             aoCancelar={cancelarAgendamentoNaTela}
             aoConcluir={concluirAgendamentoNaTela}
+            carregando={carregando}
           />
         </div>
       )}
 
       {telaAtiva === "clientes" && (
         <div>
-          <h1>Clientes</h1>
-          <ClienteForm
-            emEdicao={editando.entidade === "cliente" ? editando.dados : null}
-            aoSalvar={(dados) => salvar("cliente", dados)}
-          />
+          <div className="cabecalho-tela">
+            <h1>Clientes</h1>
+            <div className="container-botao">
+              <button className="botao-novo" onClick={() => abrirModalNovo("cliente")}>+ Novo Cliente</button>
+            </div>
+          </div>
+          
+          {carregando && <Carregando />}
+
+          <Modal aberto={modalAberto && editando.entidade === "cliente"} titulo={editando.dados ? "Editar Cliente" : "Novo Cliente"} aoFechar={fecharModal}>
+            <ClienteForm emEdicao={editando.dados} aoSalvar={(dados) => salvar("cliente", dados)} carregando={carregando} />
+          </Modal>
+
           <ClienteList
             clientes={clientes}
-            aoEditar={(dados) => setEditando({ entidade: "cliente", dados })}
+            aoEditar={(dados) => abrirModalEditar("cliente", dados)}
             aoExcluir={(dados) => setDialogoExclusao({ aberto: true, entidade: "cliente", id: dados.id })}
           />
         </div>
@@ -187,14 +261,22 @@ Sair
 
       {telaAtiva === "profissionais" && (
         <div>
-          <h1>Profissionais</h1>
-          <ProfissionalForm
-            emEdicao={editando.entidade === "profissional" ? editando.dados : null}
-            aoSalvar={(dados) => salvar("profissional", dados)}
-          />
+          <div className="cabecalho-tela">
+            <h1>Profissionais</h1>
+            <div className="container-botao">
+              <button className="botao-novo" onClick={() => abrirModalNovo("profissional")}>+ Novo Profissional</button>
+            </div>
+          </div>
+          
+          {carregando && <Carregando />}
+
+          <Modal aberto={modalAberto && editando.entidade === "profissional"} titulo={editando.dados ? "Editar Profissional" : "Novo Profissional"} aoFechar={fecharModal}>
+            <ProfissionalForm emEdicao={editando.dados} aoSalvar={(dados) => salvar("profissional", dados)} carregando={carregando} />
+          </Modal>
+
           <ProfissionalList
             profissionais={profissionais}
-            aoEditar={(dados) => setEditando({ entidade: "profissional", dados })}
+            aoEditar={(dados) => abrirModalEditar("profissional", dados)}
             aoExcluir={(dados) => setDialogoExclusao({ aberto: true, entidade: "profissional", id: dados.id })}
           />
         </div>
@@ -202,25 +284,33 @@ Sair
 
       {telaAtiva === "servicos" && (
         <div>
-          <h1>Serviços</h1>
-          <ServicoForm
-            emEdicao={editando.entidade === "servico" ? editando.dados : null}
-            aoSalvar={(dados) => salvar("servico", dados)}
-          />
+          <div className="cabecalho-tela">
+            <h1>Serviços</h1>
+            <div className="container-botao">
+              <button className="botao-novo" onClick={() => abrirModalNovo("servico")}>+ Novo Serviço</button>
+            </div>
+          </div>
+
+          {carregando && <Carregando />}
+
+          <Modal aberto={modalAberto && editando.entidade === "servico"} titulo={editando.dados ? "Editar Serviço" : "Novo Serviço"} aoFechar={fecharModal}>
+            <ServicoForm emEdicao={editando.dados} aoSalvar={(dados) => salvar("servico", dados)} carregando={carregando} />
+          </Modal>
+
           <ServicoList
             servicos={servicos}
-            aoEditar={(dados) => setEditando({ entidade: "servico", dados })}
+            aoEditar={(dados) => abrirModalEditar("servico", dados)}
             aoExcluir={(dados) => setDialogoExclusao({ aberto: true, entidade: "servico", id: dados.id })}
           />
         </div>
       )}
 
       {telaAtiva === "relatorios" && ( 
-<div> 
-<h1>Relatório de Faturamento</h1> 
-<RelatorioFaturamento /> 
-</div> 
-)}
+        <div> 
+          <h1>Relatório de Faturamento</h1> 
+          <RelatorioFaturamento /> 
+        </div> 
+      )}
     </div>
   );
 }

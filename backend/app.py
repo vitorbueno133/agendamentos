@@ -8,7 +8,7 @@ from routes.relatorio_routes import relatorio_bp
 from routes.auth_routes import auth_bp 
 
 app = Flask(__name__) 
-CORS(app, origins=["https://agendamentos-qpm3.vercel.app"])  
+CORS(app, origins=["https://agendamentos-qpm3.vercel.app"])   
 app.register_blueprint(cliente_bp) 
 app.register_blueprint(profissional_bp) 
 app.register_blueprint(auth_bp) 

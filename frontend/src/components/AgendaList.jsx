@@ -18,8 +18,7 @@ function apenasData(valor) {
   const data = new Date(valor); 
   if (isNaN(data)) return ""; 
   const ano = data.getFullYear(); 
-  const mes = String(data.getMonth() + 1).padStart(2, 
-"0"); 
+  const mes = String(data.getMonth() + 1).padStart(2, "0"); 
   const dia = String(data.getDate()).padStart(2, "0"); 
   return `${ano}-${mes}-${dia}`; 
 } 
@@ -38,7 +37,7 @@ function dataHoje() {
   return apenasData(new Date()); 
 } 
   
-function AgendaList({ agendamentos, aoCancelar, aoConcluir }) { 
+function AgendaList({ agendamentos, aoCancelar, aoConcluir, carregando }) { 
   const [filtroData, setFiltroData] = useState(dataHoje()); 
   const [filtroCliente, setFiltroCliente] = useState(""); 
   const [filtroProfissional, setFiltroProfissional] = useState(""); 
@@ -47,13 +46,11 @@ function AgendaList({ agendamentos, aoCancelar, aoConcluir }) {
   const filtrados = useMemo(() => { 
     return agendamentos.filter((a) => { 
       if (filtroData && apenasData(a.data_hora) !== filtroData) return false; 
-      if (!comecaCom(a.cliente, filtroCliente)) return 
-false; 
+      if (!comecaCom(a.cliente, filtroCliente)) return false; 
       if (!comecaCom(a.profissional, filtroProfissional)) return false; 
       return true; 
     }); 
-  }, [agendamentos, filtroData, filtroCliente, 
-filtroProfissional]); 
+  }, [agendamentos, filtroData, filtroCliente, filtroProfissional]); 
   
   const total = Math.ceil(filtrados.length / POR_PAGINA); 
   const visiveis = filtrados.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA); 
@@ -114,25 +111,27 @@ filtroProfissional]);
             {visiveis.map((agendamento) => ( 
               <tr key={agendamento.id}> 
                 
-<td>{formatarDataHora(agendamento.data_hora)}</td> 
+                <td>{formatarDataHora(agendamento.data_hora)}</td> 
                 <td>{agendamento.cliente}</td> 
                 <td>{agendamento.profissional}</td> 
                 <td>{agendamento.servico}</td> 
                 <td>{agendamento.status}</td> 
                 <td className="acoes-agendamento"> 
-                  {agendamento.status === "confirmado" 
-&& ( 
+                  {agendamento.status === "confirmado" && ( 
                     <> 
                       <button 
                         className="botao-concluir" 
-                        onClick={() => aoConcluir(agendamento.id)} 
+                        onClick={() => aoConcluir(agendamento.id)}
+                        disabled={carregando} 
                       > 
-                        ✓ Concluir 
+                        {carregando ? "Aguarde..." : "✓ Concluir"} 
                       </button> 
                       <button 
                         className="botao-cancelar" 
-                        onClick={() => aoCancelar(agendamento.id)} > 
-                        ✕ Cancelar 
+                        onClick={() => aoCancelar(agendamento.id)} 
+                        disabled={carregando}
+                      > 
+                        {carregando ? "Aguarde..." : "✕ Cancelar"}
                       </button> 
                     </> 
                   )} 

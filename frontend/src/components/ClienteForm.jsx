@@ -8,7 +8,7 @@ function mascaraTelefone(valor) {
   return nums.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3").replace(/-$/, ""); 
 } 
 
-function ClienteForm({ aoSalvar, emEdicao }) {
+function ClienteForm({ aoSalvar, emEdicao, carregando }) {
   const [nome, setNome] = useState(""); 
   const [telefone, setTelefone] = useState(""); 
   const [email, setEmail] = useState(""); 
@@ -54,7 +54,9 @@ function ClienteForm({ aoSalvar, emEdicao }) {
         value={email} 
         onChange={(e) => setEmail(e.target.value)} 
       /> 
-      <button type="submit">{emEdicao ? "Atualizar" : "Salvar"}</button> 
+      <button type="submit" disabled={carregando}>
+        {carregando ? "Aguarde..." : (emEdicao ? "Atualizar" : "Salvar")}
+      </button> 
     </form> 
   ); 
 } 
